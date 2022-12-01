@@ -11,13 +11,16 @@
 import Foundation
 
 public enum InputError: Error, CustomStringConvertible {
-    case unexpectedInput
+    case unexpectedInput(unrecognized: (any StringProtocol)? = nil)
     case couldNotCast(target: Any.Type)
 
     public var description: String {
         switch self {
-        case .unexpectedInput:
-            return "Input transform encountered an unexpected character or substring"
+        case .unexpectedInput(unrecognized: let string):
+            guard let string else {
+                return "Input transform encountered an unexpected substring"
+            }
+            return "Input transform encountered unexpected `\(string)`"
         case .couldNotCast(target: let type):
             return "Could not cast input to target type `\(type)`"
         }
