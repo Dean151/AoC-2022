@@ -19,9 +19,8 @@ struct Day01: Puzzle {
     typealias OutputPartOne = Int
     typealias OutputPartTwo = Int
 
-    static func transform(raw: String) async throws -> [ElveCalories] {
-        let components = raw.components(separatedBy: "\n\n")
-        return try components.map { try .parse(raw: $0) }
+    static var componentsSeparator: InputSeparator {
+        .string(string: "\n\n")
     }
 }
 
