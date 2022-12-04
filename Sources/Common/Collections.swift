@@ -3,6 +3,9 @@
 //
 
 extension Collection {
+    public func filter(by keyPath: KeyPath<Element, Bool>) -> [Element] {
+        self.filter { $0[keyPath: keyPath] }
+    }
     public func map<T>(by keyPath: KeyPath<Element, T>) -> [T] {
         self.map { $0[keyPath: keyPath] }
     }
