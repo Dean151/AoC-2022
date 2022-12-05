@@ -67,6 +67,7 @@ extension Puzzle {
         let elapsed = Double(DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000_000
         let formatter = NumberFormatter()
         formatter.minimumIntegerDigits = 1
+        formatter.minimumFractionDigits = 4
         formatter.maximumFractionDigits = 4
         print("Elapsed time: \(formatter.string(from: NSNumber(value: elapsed))!)s")
     }
