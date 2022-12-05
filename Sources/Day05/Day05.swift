@@ -15,9 +15,99 @@ import Common
 
 @main
 struct Day05: Puzzle {
-    typealias Input = String
-    typealias OutputPartOne = Never
-    typealias OutputPartTwo = Never
+    typealias Input = CargoCrane
+    typealias OutputPartOne = String
+    typealias OutputPartTwo = String
+}
+
+struct CargoCrane: Parsable {
+    struct Move: Parsable {
+        let amount: Int
+        let from: Int
+        let to: Int
+
+        static func parse(raw: String) throws -> CargoCrane.Move {
+            let components = raw.components(separatedBy: .whitespaces)
+            guard components.count == 6 else {
+                throw InputError.unexpectedInput(unrecognized: raw)
+            }
+            guard let amount = Int(components[1]) else {
+                throw InputError.unexpectedInput(unrecognized: components[1])
+            }
+            guard let from = Int(components[3]) else {
+                throw InputError.unexpectedInput(unrecognized: components[3])
+            }
+            guard let to = Int(components[5]) else {
+                throw InputError.unexpectedInput(unrecognized: components[5])
+            }
+            return .init(amount: amount, from: from, to: to)
+        }
+    }
+    struct Stacks: Parsable {
+        let stacks: [Array<Character>]
+
+        var upperWord: String {
+            var word = ""
+            for stack in stacks {
+                guard let char = stack.last else {
+                    continue
+                }
+                word.append(char)
+            }
+            return word
+        }
+
+        func after(_ moves: [Move], multipleAtOnce: Bool) throws -> Stacks {
+            var stacks = stacks
+            for move in moves {
+                if multipleAtOnce {
+                    let chars = stacks[move.from-1].suffix(move.amount)
+                    stacks[move.from-1].removeLast(move.amount)
+                    stacks[move.to-1] += chars
+                } else {
+                    for _ in 0..<move.amount {
+                        let char = stacks[move.from-1].removeLast()
+                        stacks[move.to-1].append(char)
+                    }
+                }
+            }
+            return .init(stacks: stacks)
+        }
+
+        static func parse(raw: String) throws -> CargoCrane.Stacks {
+            let offsets = [1, 5, 9, 13, 17, 21, 25, 29, 33]
+            var stacks: [Array<Character>] = .init(repeating: [], count: 9)
+            var lines = raw.components(separatedBy: .newlines)
+            _ = lines.removeLast()
+            lineLoop: for line in lines.reversed() {
+                offsetLoop: for (index, offset) in offsets.enumerated() {
+                    guard offset < line.count else {
+                        continue lineLoop
+                    }
+                    let char = line[line.index(line.startIndex, offsetBy: offset)]
+                    guard char.isLetter else {
+                        continue offsetLoop
+                    }
+                    stacks[index].append(char)
+                }
+            }
+            return .init(stacks: stacks)
+        }
+    }
+
+    let stacks: Stacks
+    let moves: [Move]
+
+    static func parse(raw: String) throws -> CargoCrane {
+        let components = raw.components(separatedBy: "\n\n")
+        guard components.count == 2 else {
+            throw InputError.unexpectedInput(unrecognized: raw)
+        }
+        return .init(
+            stacks: try .parse(raw: components[0]),
+            moves: try components[1].components(separatedBy: .newlines).map({ try .parse(raw: $0) })
+        )
+    }
 }
 
 // MARK: - PART 1
@@ -25,13 +115,12 @@ struct Day05: Puzzle {
 extension Day05 {
     static var partOneExpectations: [any Expectation<Input, OutputPartOne>] {
         [
-            // TODO: add expectations for part 1
+            assert(expectation: "CMZ", fromRaw: "    [D]\n[N] [C]\n[Z] [M] [P]\n 1   2   3\n\nmove 1 from 2 to 1\nmove 3 from 1 to 3\nmove 2 from 2 to 1\nmove 1 from 1 to 2")
         ]
     }
 
     static func solvePartOne(_ input: Input) async throws -> OutputPartOne {
-        // TODO: Solve part 1 :)
-        throw ExecutionError.notSolved
+        try input.stacks.after(input.moves, multipleAtOnce: false).upperWord
     }
 }
 
@@ -40,12 +129,11 @@ extension Day05 {
 extension Day05 {
     static var partTwoExpectations: [any Expectation<Input, OutputPartTwo>] {
         [
-            // TODO: add expectations for part 2
+            assert(expectation: "MCD", fromRaw: "    [D]\n[N] [C]\n[Z] [M] [P]\n 1   2   3\n\nmove 1 from 2 to 1\nmove 3 from 1 to 3\nmove 2 from 2 to 1\nmove 1 from 1 to 2")
         ]
     }
 
     static func solvePartTwo(_ input: Input) async throws -> OutputPartTwo {
-        // TODO: Solve part 2 :)
-        throw ExecutionError.notSolved
+        try input.stacks.after(input.moves, multipleAtOnce: true).upperWord
     }
 }
