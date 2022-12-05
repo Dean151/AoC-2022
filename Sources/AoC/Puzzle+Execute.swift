@@ -26,17 +26,18 @@ public enum ExecutionError: Error, CustomStringConvertible {
 
 extension Puzzle {
     public static func main() async {
+        let start: DispatchTime
         let input: Input
         do {
             // Input resolution
             let rawInput = try await rawInput()
+
+            start = .now()
             input = try await transform(raw: rawInput)
         } catch {
             print("Input parsing failed: \(error)")
             exit(1)
         }
-
-        let start = DispatchTime.now()
 
         do {
             // Part 1
