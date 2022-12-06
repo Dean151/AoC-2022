@@ -10,14 +10,30 @@
 
 import Foundation
 
+import Algorithms
+
 import AoC
 import Common
 
 @main
 struct Day06: Puzzle {
     typealias Input = String
-    typealias OutputPartOne = Never
-    typealias OutputPartTwo = Never
+    typealias OutputPartOne = Int
+    typealias OutputPartTwo = Int
+
+    static func findStartOfMessageMarker(in input: String, ofSize size: Int) throws -> Int {
+        let windows = input.windows(ofCount: size)
+        guard let index = windows.firstIndex(where: { !$0.haveDoublons }) else {
+            throw ExecutionError.unsolvable
+        }
+        return windows.distance(from: windows.startIndex, to: index) + size
+    }
+}
+
+extension StringProtocol {
+    var haveDoublons: Bool {
+        String(uniqued()).count < count
+    }
 }
 
 // MARK: - PART 1
@@ -25,13 +41,16 @@ struct Day06: Puzzle {
 extension Day06 {
     static var partOneExpectations: [any Expectation<Input, OutputPartOne>] {
         [
-            // TODO: add expectations for part 1
+            assert(expectation: 7, from: "mjqjpqmgbljsphdztnvjfqwrcgsmlb"),
+            assert(expectation: 5, from: "bvwbjplbgvbhsrlpgdmjqwftvncz"),
+            assert(expectation: 6, from: "nppdvjthqldpwncqszvftbrmjlhg"),
+            assert(expectation: 10, from: "nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"),
+            assert(expectation: 11, from: "zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"),
         ]
     }
 
     static func solvePartOne(_ input: Input) async throws -> OutputPartOne {
-        // TODO: Solve part 1 :)
-        throw ExecutionError.notSolved
+        try findStartOfMessageMarker(in: input, ofSize: 4)
     }
 }
 
@@ -40,12 +59,15 @@ extension Day06 {
 extension Day06 {
     static var partTwoExpectations: [any Expectation<Input, OutputPartTwo>] {
         [
-            // TODO: add expectations for part 2
+            assert(expectation: 19, from: "mjqjpqmgbljsphdztnvjfqwrcgsmlb"),
+            assert(expectation: 23, from: "bvwbjplbgvbhsrlpgdmjqwftvncz"),
+            assert(expectation: 23, from: "nppdvjthqldpwncqszvftbrmjlhg"),
+            assert(expectation: 29, from: "nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"),
+            assert(expectation: 26, from: "zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"),
         ]
     }
 
     static func solvePartTwo(_ input: Input) async throws -> OutputPartTwo {
-        // TODO: Solve part 2 :)
-        throw ExecutionError.notSolved
+        try findStartOfMessageMarker(in: input, ofSize: 14)
     }
 }
