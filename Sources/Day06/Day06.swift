@@ -32,7 +32,7 @@ struct Day06: Puzzle {
 
 extension StringProtocol {
     var haveDoublons: Bool {
-        String(uniqued()).count < count
+        Set(self).count < count
     }
 }
 
