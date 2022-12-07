@@ -12,6 +12,9 @@ extension Collection {
     public func max(by keyPath: KeyPath<Element, some Comparable>) -> Element? {
         self.max { $0[keyPath: keyPath] < $1[keyPath: keyPath] }
     }
+    public func min(by keyPath: KeyPath<Element, some Comparable>) -> Element? {
+        self.min { $0[keyPath: keyPath] < $1[keyPath: keyPath] }
+    }
     public func sorted(by keyPath: KeyPath<Element, some Comparable>) -> [Element] {
         self.sorted { $0[keyPath: keyPath] < $1[keyPath: keyPath] }
     }
