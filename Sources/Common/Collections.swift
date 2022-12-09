@@ -3,6 +3,12 @@
 //
 
 extension Collection {
+    public func extremum(by keyPath: KeyPath<Element, some Comparable>) -> (min: Element, max: Element)? {
+        guard let min = min(by: keyPath), let max = max(by: keyPath) else {
+            return nil
+        }
+        return (min, max)
+    }
     public func filter(by keyPath: KeyPath<Element, Bool>) -> [Element] {
         self.filter { $0[keyPath: keyPath] }
     }
@@ -17,5 +23,14 @@ extension Collection {
     }
     public func sorted(by keyPath: KeyPath<Element, some Comparable>) -> [Element] {
         self.sorted { $0[keyPath: keyPath] < $1[keyPath: keyPath] }
+    }
+}
+
+extension Collection where Element: Comparable {
+    public func extremum() -> (min: Element, max: Element)? {
+        guard let min = self.min(), let max = self.max() else {
+            return nil
+        }
+        return (min, max)
     }
 }

@@ -28,9 +28,15 @@ public struct Coordinate2D: Hashable, Equatable {
 }
 
 extension Coordinate2D {
-    static let zero = Coordinate2D(x: 0, y: 0)
+    public static let zero = Coordinate2D(x: 0, y: 0)
 }
 
 public enum Direction: CaseIterable {
     case north, east, south, west
+}
+
+extension Coordinate2D {
+    public func manhattanDistance(to other: Coordinate2D) -> Int {
+        abs(other.x - x) + abs(other.y - y)
+    }
 }
