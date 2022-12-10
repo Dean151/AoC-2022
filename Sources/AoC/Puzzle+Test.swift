@@ -66,7 +66,7 @@ extension Puzzle {
     static func testSolving<Output>(_ expectations: [any Expectation<Input, Output>], callable: (Input) async throws -> Output) async throws {
         for test in expectations {
             let input = try await test.getInput()
-            try await callable(input)
+            let _ = try await callable(input)
         }
     }
 
