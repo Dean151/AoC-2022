@@ -27,26 +27,25 @@ struct Day11: Puzzle {
 
 struct KeepAway {
     let monkeys: [Monkey]
-    let divider: UInt64
+    let divider: Int
+    let masterDivider: Int
     var inspected: [Int]
 
-    init(monkeys: [Monkey], divider: UInt64 = 1, inspected: [Int]? = nil) {
+    init(monkeys: [Monkey], divider: Int = 1, inspected: [Int]? = nil) {
         self.monkeys = monkeys
         self.divider = divider
+        self.masterDivider = monkeys.map(by: \.divisorTest).reduce(1, *)
         self.inspected = inspected ?? .init(repeating: 0, count: monkeys.count)
     }
 
     func after(rounds: Int) -> Self {
         var monkeys = monkeys
         var inspected = inspected
-        for round in 0..<rounds {
-            if round % 100 == 0 {
-                print(round)
-            }
+        for _ in 0..<rounds {
             for index in monkeys.startIndex..<monkeys.endIndex {
                 let monkey = monkeys[index]
                 for item in monkeys[index].items {
-                    let value: UInt64
+                    let value: Int
                     switch monkey.operation {
                     case .add(value: let new):
                         value = (item + new) / divider
@@ -56,9 +55,9 @@ struct KeepAway {
                         value = (item * item) / divider
                     }
                     if value % monkey.divisorTest == 0 {
-                        monkeys[monkey.throwTo.whenTrue].items.append(value)
+                        monkeys[monkey.throwTo.whenTrue].items.append(value % masterDivider)
                     } else {
-                        monkeys[monkey.throwTo.whenFalse].items.append(value)
+                        monkeys[monkey.throwTo.whenFalse].items.append(value % masterDivider)
                     }
                 }
                 inspected[index] += monkey.items.count
@@ -71,8 +70,8 @@ struct KeepAway {
 
 struct Monkey: Parsable {
     enum Operation: Parsable {
-        case add(value: UInt64)
-        case multiply(factor: UInt64)
+        case add(value: Int)
+        case multiply(factor: Int)
         case square
 
         static func parse(raw: String) throws -> Monkey.Operation {
@@ -81,7 +80,7 @@ struct Monkey: Parsable {
                 return .square
             }
             let components = string.components(separatedBy: .whitespaces)
-            guard components.count == 2, let value = UInt64(components[1]) else {
+            guard components.count == 2, let value = Int(components[1]) else {
                 throw InputError.unexpectedInput(unrecognized: raw)
             }
             switch components[0] {
@@ -95,18 +94,18 @@ struct Monkey: Parsable {
         }
     }
 
-    var items: [UInt64]
+    var items: [Int]
     let operation: Operation
-    let divisorTest: UInt64
+    let divisorTest: Int
     let throwTo: (whenTrue: Int, whenFalse: Int)
 
     static func parse(raw: String) throws -> Monkey {
         let components = raw.components(separatedBy: .newlines)
-        let items = components[1].suffix(from: components[1].index(components[1].startIndex, offsetBy: 18)).components(separatedBy: ", ").compactMap({ UInt64($0) })
+        let items = components[1].suffix(from: components[1].index(components[1].startIndex, offsetBy: 18)).components(separatedBy: ", ").compactMap({ Int($0) })
         if items.isEmpty {
             throw InputError.unexpectedInput(unrecognized: components[1])
         }
-        guard let divisorTest = UInt64(String(components[3].suffix(from: components[3].index(components[3].startIndex, offsetBy: 21)))) else {
+        guard let divisorTest = Int(String(components[3].suffix(from: components[3].index(components[3].startIndex, offsetBy: 21)))) else {
             throw InputError.unexpectedInput(unrecognized: components[3])
         }
         guard let whenTrue = Int(components[4].suffix(from: components[4].index(components[4].startIndex, offsetBy: 29))) else {
