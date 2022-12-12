@@ -13,6 +13,15 @@ public struct Coordinate2D: Hashable, Equatable {
         self.y = y
     }
 
+    public var adjacents: [Coordinate2D] {
+        [
+            .init(x: x, y: y - 1),
+            .init(x: x + 1, y: y),
+            .init(x: x, y: y + 1),
+            .init(x: x - 1, y: y),
+        ]
+    }
+
     public func adjacent(moving direction: Direction) -> Coordinate2D {
         switch direction {
         case .north:

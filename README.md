@@ -35,5 +35,6 @@ Some special attention will be addressed regarding performances, I'll try to sol
 | **9**  | 0,0180s          | 6057      | 2514      |
 | **10** | 0,0012s          | 15140     | BPJAZGAP  |
 | **11** | N/A              | 111210    | N/A       |
+| **12** | 0,0268s          | 380       | 375       |
 
 \* : Best elapsed time of the complete solution using "Release" mode on a MacBook Pro 14in 2021 with M1 Pro 10 CPU 16 GPU and 32GB of memory
