@@ -10,6 +10,8 @@
 
 import Foundation
 
+import Algorithms
+
 import AoC
 import Common
 
@@ -156,8 +158,8 @@ extension Move: CustomStringConvertible {
 
 extension Rope: CustomStringConvertible {
     var description: String {
-        let (minX,maxX) = parts.map({ $0.x }).extremum().unsafelyUnwrapped
-        let (minY,maxY) = parts.map({ $0.y }).extremum().unsafelyUnwrapped
+        let (minX,maxX) = parts.map({ $0.x }).minAndMax().unsafelyUnwrapped
+        let (minY,maxY) = parts.map({ $0.y }).minAndMax().unsafelyUnwrapped
         var description = ""
         for y in min(minY, 0)...max(0, maxY) {
             for x in min(minX, 0)...max(0, maxX) {
