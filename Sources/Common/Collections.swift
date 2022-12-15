@@ -19,3 +19,30 @@ extension Collection {
         self.sorted { $0[keyPath: keyPath] < $1[keyPath: keyPath] }
     }
 }
+
+extension Collection where Element == ClosedRange<Int> {
+    public func consolidate() -> [Element] {
+        let sorted = sorted(by: \.lowerBound)
+        guard let first = sorted.first else {
+            return []
+        }
+        if count == 1 {
+            return [first]
+        }
+        var new: [ClosedRange<Int>] = []
+        var current = first
+        for range in sorted[1...] {
+            if current.clamped(to: range) == range {
+                continue
+            }
+            if current.overlaps(range) {
+                current = current.lowerBound...range.upperBound
+            } else {
+                new.append(current)
+                current = range
+            }
+        }
+        new.append(current)
+        return new
+    }
+}
