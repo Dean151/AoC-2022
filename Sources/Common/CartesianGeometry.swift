@@ -7,12 +7,16 @@ import Foundation
 import AoC
 
 public struct Coordinate2D: Hashable, Equatable {
-    public let x: Int
-    public let y: Int
+    public var x: Int
+    public var y: Int
 
     public init(x: Int, y: Int) {
         self.x = x
         self.y = y
+    }
+
+    public func translated(by other: Coordinate2D) -> Coordinate2D {
+        .init(x: x + other.x, y: y + other.y)
     }
 
     public var adjacents: [Coordinate2D] {
