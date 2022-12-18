@@ -6,6 +6,8 @@ import Foundation
 
 import AoC
 
+// MARK: - 2D
+
 public struct Coordinate2D: Hashable, Equatable {
     public var x: Int
     public var y: Int
@@ -14,17 +16,19 @@ public struct Coordinate2D: Hashable, Equatable {
         self.x = x
         self.y = y
     }
+}
 
+extension Coordinate2D {
     public func translated(by other: Coordinate2D) -> Coordinate2D {
         .init(x: x + other.x, y: y + other.y)
     }
 
     public var adjacents: [Coordinate2D] {
         [
-            .init(x: x, y: y - 1),
-            .init(x: x + 1, y: y),
-            .init(x: x, y: y + 1),
             .init(x: x - 1, y: y),
+            .init(x: x + 1, y: y),
+            .init(x: x, y: y - 1),
+            .init(x: x, y: y + 1),
         ]
     }
 
@@ -75,5 +79,36 @@ public enum Direction: CaseIterable {
 extension Coordinate2D {
     public func manhattanDistance(to other: Coordinate2D) -> Int {
         abs(other.x - x) + abs(other.y - y)
+    }
+}
+
+// MARK: - 3D
+
+public struct Coordinate3D: Hashable, Equatable {
+    public var x: Int
+    public var y: Int
+    public var z: Int
+
+    public init(x: Int, y: Int, z: Int) {
+        self.x = x
+        self.y = y
+        self.z = z
+    }
+}
+
+extension Coordinate3D {
+    public var adjacents: [Coordinate3D] {
+        [
+            .init(x: x - 1, y: y, z: z),
+            .init(x: x + 1, y: y, z: z),
+            .init(x: x, y: y - 1, z: z),
+            .init(x: x, y: y + 1, z: z),
+            .init(x: x, y: y, z: z - 1),
+            .init(x: x, y: y, z: z + 1),
+        ]
+    }
+
+    public func isWithin(x xRange: ClosedRange<Int>, y yRange: ClosedRange<Int>, z zRange: ClosedRange<Int>) -> Bool {
+        xRange.contains(x) && yRange.contains(y) && zRange.contains(z)
     }
 }
