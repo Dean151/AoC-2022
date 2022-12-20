@@ -15,9 +15,31 @@ import Common
 
 @main
 struct Day20: Puzzle {
-    typealias Input = String
-    typealias OutputPartOne = Never
-    typealias OutputPartTwo = Never
+    typealias Input = [Int]
+    typealias OutputPartOne = Int
+    typealias OutputPartTwo = Int
+}
+
+struct Value {
+    let value: Int
+    let sortOrder: Int
+}
+
+extension Day20 {
+    static func mix(_ input: [Int], times: Int = 1) -> [Value] {
+        let count = input.count
+        var values = input.enumerated().map({ Value(value: $0.element, sortOrder: $0.offset) })
+        for sortIndex in 0..<(count*times) {
+            let currentIndex = values.firstIndex(where: { $0.sortOrder == (sortIndex % count) }).unsafelyUnwrapped
+            let element = values.remove(at: currentIndex)
+            var newIndex = (currentIndex + element.value) % (count - 1)
+            if newIndex < 0 {
+                newIndex += count - 1
+            }
+            values.insert(element, at: newIndex)
+        }
+        return values
+    }
 }
 
 // MARK: - PART 1
@@ -25,13 +47,14 @@ struct Day20: Puzzle {
 extension Day20 {
     static var partOneExpectations: [any Expectation<Input, OutputPartOne>] {
         [
-            // TODO: add expectations for part 1
+            assert(expectation: 3, fromRaw: "1\n2\n-3\n3\n-2\n0\n4")
         ]
     }
 
     static func solvePartOne(_ input: Input) async throws -> OutputPartOne {
-        // TODO: Solve part 1 :)
-        throw ExecutionError.notSolved
+        let mixed = mix(input)
+        let zeroIndex = mixed.firstIndex(where: { $0.value == 0 }).unsafelyUnwrapped
+        return [1000,2000,3000].map({ mixed[(zeroIndex + $0) % input.count].value }).reduce(0, +)
     }
 }
 
@@ -40,12 +63,13 @@ extension Day20 {
 extension Day20 {
     static var partTwoExpectations: [any Expectation<Input, OutputPartTwo>] {
         [
-            // TODO: add expectations for part 2
+            assert(expectation: 1623178306, fromRaw: "1\n2\n-3\n3\n-2\n0\n4")
         ]
     }
 
     static func solvePartTwo(_ input: Input) async throws -> OutputPartTwo {
-        // TODO: Solve part 2 :)
-        throw ExecutionError.notSolved
+        let mixed = mix(input.map({ $0 * 811589153 }), times: 10)
+        let zeroIndex = mixed.firstIndex(where: { $0.value == 0 }).unsafelyUnwrapped
+        return [1000,2000,3000].map({ mixed[(zeroIndex + $0) % input.count].value }).reduce(0, +)
     }
 }
