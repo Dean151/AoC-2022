@@ -74,6 +74,51 @@ extension Coordinate2D {
 
 public enum Direction: CaseIterable {
     case north, east, south, west
+
+    public func after(turning turn: Turn) -> Direction {
+        switch self {
+        case .north:
+            switch turn {
+            case .left:
+                return .west
+            case .right:
+                return .east
+            case .around:
+                return .south
+            }
+        case .east:
+            switch turn {
+            case .left:
+                return .north
+            case .right:
+                return .south
+            case .around:
+                return .west
+            }
+        case .south:
+            switch turn {
+            case .left:
+                return .east
+            case .right:
+                return .west
+            case .around:
+                return .north
+            }
+        case .west:
+            switch turn {
+            case .left:
+                return .south
+            case .right:
+                return .north
+            case .around:
+                return .east
+            }
+        }
+    }
+}
+
+public enum Turn: CaseIterable {
+    case left, right, around
 }
 
 extension Coordinate2D {

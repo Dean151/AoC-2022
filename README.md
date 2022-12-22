@@ -45,5 +45,6 @@ Some special attention will be addressed regarding performances, I'll try to sol
 | **19** | N/A              | N/A            | N/A            |
 | **20** | 0,1342s          | 7584           | 4907679608191  |
 | **21** | 0,0107s          | 51928383302238 | 3305669217840  |
+| **22** | 0,0310s          | 97356          | 120175         |
 
 \* : Best elapsed time of the complete solution using "Release" mode on a MacBook Pro 14in 2021 with M1 Pro 10 CPU 16 GPU and 32GB of memory
